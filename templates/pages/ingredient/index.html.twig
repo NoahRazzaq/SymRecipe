@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} SymRecipe - Mes ingrédients{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+<h1>Mes ingrédients</h1>
+
+<a href="{{ path('ingredient.new') }}" class="btn btn-primary">
+Créer un ingrédient</a>
+
+{% for message in app.flashes('success') %}
+   <div class="alert alert-success">
+   {{message}}
+   </div>
+
+   {% endfor %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Numéro</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Prix</th>
+      <th scope="col">Date de création</th>
+      <th scope="col">Editon</th>
+      <th scope="col">Suppression </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ingredient in ingredients %}
+
+
+
+   
+    <tr class="table-primary">
+      <th scope="row">{{ingredient.id}}</th>
+      <td>{{ingredient.name}}</td>
+      <td>{{ingredient.price}}</td>
+      <td>{{ingredient.createdAt|date('d/m/Y')}}</td>
+      <td>
+        <a href="{{ path('ingredient.edit', { id: ingredient.id}) }}" class="btn btn-info">
+        Modifier
+        </a>
+        </td>
+        <td>
+            <a href="{{ path('ingredient.delete', { id: ingredient.id}) }}" class="btn btn-warning">
+        Supprimer
+        </a>
+        </td>
+    </tr>
+{% endfor %}
+   
+  </tbody>
+</table>
+
+</div>
+
+{% endblock %}
