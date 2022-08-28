@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IngredientController extends AbstractController
 {
-    #[Route('/ingredient', name: 'app_ingredient')]
+    #[Route('/ingredient', 'ingredient.index')]
     public function index(IngredientRepository $respository): Response //injection de dépéndance
     {
         $ingridients = $respository ->findAll();
@@ -48,7 +48,7 @@ class IngredientController extends AbstractController
                 'Votre ingrédient a été créé avec succès'
 
             );
-            //return $this->redirectToRoute('ingredient/index.html.twig');
+            return $this->redirectToRoute('ingredient.index');
         }
 
 
