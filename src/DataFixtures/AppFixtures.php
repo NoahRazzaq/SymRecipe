@@ -4,14 +4,24 @@ namespace App\DataFixtures;
 
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $hasher;
+
+    public function __construct()
+    {
+    
+    }
 
     
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager): void //dependance
     {
         // Ingredients
         $ingredients = [];
@@ -43,6 +53,18 @@ class AppFixtures extends Fixture
 
             $manager->persist($recipe);
 
+        }
+
+        for ($i=0; $i < 10 ; $i++) { 
+            $user = new User();
+            $user->setFullName('Name' .$i)
+            ->setPseudo(mt_rand(0, 1))
+            ->setEmail('email'. $i .'@gmail.com')
+            ->setRoles(['ROLE_USER'])
+            ->setPlainPassword('password');
+
+
+            $manager->persist($user);
         }
        
         $manager->flush();
