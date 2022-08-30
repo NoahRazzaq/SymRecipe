@@ -39,6 +39,21 @@ class RecipeRepository extends ServiceEntityRepository
         }
     }
 
+    // this method allow us to find public recipe based on number of recipes
+    public function findPublicRecipe(?int $nbRecipes): array
+    {
+        $queryBuiler = $this->createQueryBuilder('r')
+            ->where('r.isPublic = 1')
+            ->orderBy('r.createdAt', 'DESC');
+        
+        if($nbRecipes !== 0 || !$nbRecipes !== null) {
+            $queryBuiler->setMaxResults($nbRecipes); 
+        }
+          return $queryBuiler->getQuery()
+            ->getResult();
+    }
+    
+
 //    /**
 //     * @return Recipe[] Returns an array of Recipe objects
 //     */
