@@ -59,7 +59,7 @@ class RecipeController extends AbstractController
             'form' =>$form->createView()
         ]);
     }
-    #[Security("is_granted('ROLE_USER)and user === recipe.getUser() ")]
+    #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     #[Route('/recette/edition/{id}', 'recipe.edit', methods:['GET','POST'])]
     public function edit(RecipeRepository $respository,
                          Recipe $recipe,
@@ -82,23 +82,23 @@ class RecipeController extends AbstractController
 
             );
 
-            return $this->redirectToRoute('ingredient.index');
+            return $this->redirectToRoute('recipe.index');
 
         }
 
-        return $this->render('pages/ingredient/edit.html.twig',[
+        return $this->render('pages/recipe/edit.html.twig',[
             'form' => $form->createView()
         ]);
     }
 
 
 
-    #[Route('/recette/publique', 'recipe.index.public', methods:['GET'])]
+    #[Route('/recette/communaute', 'recipe.community', methods:['GET'])]
     public function indexPublic(RecipeRepository $respository): Response
     {
         $recipes = $respository->findPublicRecipe(null);
 
-        return $this->render('/pages/recipe/index_public.html.twig', [
+        return $this->render('/pages/recipe/community.html.twig', [
             'recipes' => $recipes,
         ]);
     }
@@ -145,6 +145,7 @@ class RecipeController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     #[Route('/recette/suppression/{id}', 'recipe.delete', methods: ['GET'])]
     public function delete(EntityManagerInterface $manager, Recipe $recipe): Response
     {

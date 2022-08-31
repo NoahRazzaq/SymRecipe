@@ -33,6 +33,7 @@ class SecurityController extends AbstractController
         //Nothing to do here
     }
 
+    
     #[Route('/inscription', 'security.registration', methods:['GET', 'POST'])]
     public function registration(Request $request, EntityManagerInterface $manager) : Response
     {

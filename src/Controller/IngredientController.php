@@ -29,7 +29,7 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    #[Route('/ingredient/nouveau', 'ingredient.new', methods:['GET', 'POST'])]
+    #[Route('/ingredient/creation', 'ingredient.new', methods:['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function new(
         Request $request,
@@ -96,17 +96,14 @@ class IngredientController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
     #[Route('/ingredient/suppression/{id}', 'ingredient.delete', methods: ['GET'])]
     public function delete(EntityManagerInterface $manager, Ingredient $ingredient): Response
     {
-        if(!$ingredient) {
-            $this->addFlash(
-                'success',
-                'L\'ingrédient introuvable'
-
-            );
-        }
-
+        $this->addFlash(
+            'success',
+            'Votre ingrédient a été supprimé avec succès !'
+        );
         $manager->remove($ingredient);
         $manager->flush();
 
