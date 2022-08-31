@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ContactType;
 use App\Entity\Contact;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ use Symfony\Component\Mime\Email;
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'contact.index')]
-    public function index(Request $request, EntityManagerInterface $manager, MailerInterface $mailer): Response
+    public function index(Request $request, EntityManagerInterface $manager, MailService $mailService): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -29,15 +30,12 @@ class ContactController extends AbstractController
             $manager->persist($contact);
             $manager->flush();
 
-            //Email
-
-            $email = (new Email())
-            ->from($contact->getEmail())
-            ->to('you@example.com')
-            ->subject($contact->getSubject())
-            ->html($contact->getMessage()) ;
-
-        $mailer->send($email);
+           //email
+           $mailService->sendEmail(
+            $contact->getEmail(),
+            $contact->getSubject(),
+            $contact->getSubject(),
+           );
 
             $this->addFlash(
                 'success',
