@@ -10,6 +10,8 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
+use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
@@ -19,6 +21,8 @@ class AppFixtures extends Fixture
 
     public function __construct()
     {
+
+        $this->faker = Factory::create('fr_FR');
     
     }
 
@@ -45,7 +49,7 @@ class AppFixtures extends Fixture
         $ingredients = [];
         for ($i = 0; $i < 50; $i++) {
             $ingredient = new Ingredient();
-            $ingredient->setName('Ingredient'. $i)
+            $ingredient->setName($this->faker->word())
                 ->setPrice(mt_rand(0, 100))
                 ->setUser($users[mt_rand(0, count($users) - 1)]);
 

@@ -13,9 +13,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
+use Vich\UploaderBundle\Storage\FileSystemStorage;
 
 class RecipeController extends AbstractController
 {
@@ -96,6 +99,12 @@ class RecipeController extends AbstractController
     #[Route('/recette/communaute', 'recipe.community', methods:['GET'])]
     public function indexPublic(RecipeRepository $respository): Response
     {
+        $cache = new FilesystemAdapter();
+        $data = $cache->get('recipes', function(ItemInterface $item) use ($respository){
+            $item->expiresAfter(15);
+            return $respository->findPublicRecipe(null);
+        });
+
         $recipes = $respository->findPublicRecipe(null);
 
         return $this->render('/pages/recipe/community.html.twig', [
